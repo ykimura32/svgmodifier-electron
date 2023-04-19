@@ -1,0 +1,15 @@
+{
+  "name": "electron-blog-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yuki Kimura",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^24.1.2"
+  }
+}

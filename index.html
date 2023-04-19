@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>SVG Modifier</title>
+    <style>
+      body {
+        font-family:Arial, Helvetica, sans-serif;
+        width: 90vw;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      p {
+        line-height: 1.5;
+      }
+      .code {
+        font-family:'Courier New', Courier, monospace;
+        font-size: 0.9rem;
+        padding: 0.25rem;
+        font-weight: 500;
+        background-color: #f0f0f0;
+      }
+      input[type="text"] {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 5px;
+      }
+
+      button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top: 10px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #3e8e41;
+      }
+
+      .result {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        display: none;
+      }
+      button {
+        margin-right: 1em;
+      }
+      .file-input {
+        display: block;
+        line-height: 1.5;
+        margin: 2rem 0;
+      }
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 25rem;
+  font-size: small;
+  background-color: #eeeacb;
+  padding: 1rem;
+  line-height: normal;
+  border-radius: 6px;
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 17%;
+}
+.tooltiptext li {
+  font-weight: bold;
+  font-style:italic;
+  list-style-type: none;
+  margin: 0 0;
+}
+  /* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+    </style>
+  </head>
+  <body>
+    <h1>SVG Modifier</h1>
+    <p>This tool will inspect all SVG files in a local source folder, add the missing line of code <span class="code">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span> if it isn't there already, and copy the modified files into the destination folder. <br /><strong>Both folders must exist in your local file system and be writeable.</strong></p>
+    <form id="form">
+      <div class="file-input">
+        <label for="source-folder">Source Folder: <div class="tooltip"><i class="fa fa-question-circle"></i></label>
+          <span class="tooltiptext">Mac example:<br /><ul><li>/Users/(username)/Desktop/svg/needs-code</li></ul><br />Windows example:<br /><br /><ul><li>C:\users\(username)\images\svg\needs-code</li></ul><br />Replace <strong><i>(username)</i></strong> with the name of the user profile you use to log into your laptop. </span>
+        </div>
+        <input type="text" id="source-folder" name="source-folder" value="" placeholder="/path/to/source/folder">
+      </div>
+
+      <div class="file-input">
+          <label for="destination-folder">Destination Folder: <div class="tooltip"><i class="fa fa-question-circle"></i></label>
+          <span class="tooltiptext">Mac example:<br /><ul><li>/Users/(username)/Desktop/svg/has-code</li></ul><br />Windows example:<br /><br /><ul><li>C:\users\(username)\images\svg\has-code</li></ul><br />Replace <i><strong>(username)</i></strong> with the name of the user profile you use to log into your laptop. </span>
+      </div>
+
+      <input type="text" id="destination-folder" name="destination-folder" value="" placeholder="/path/to/destination/folder">
+      </form>
+      
+    
+      <button type="submit">Modify SVG Files</button> 
+      <button type="button" onClick="window.location.reload()">Start Over</button>
+    </form>
+
+    <div id="result" class="result">
+      <p><strong>Result:</strong></p>
+      <p id="status"></p>
+      <ul id="filenames"></ul>
+    </div>
+    <script>
+      const form = document.getElementById('form');
+      const result = document.getElementById('result');
+      const status = document.getElementById('status');
+      const filenames = document.getElementById('filenames');
+
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+
+        // Get the source and destination folders
+        const sourceFolder = document.getElementById('source-folder').value;
+        const destinationFolder = document.getElementById('destination-folder').value;
+
+        // Send a POST request to the server
+        fetch('/fixSvg', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ sourceFolder, destinationFolder })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          // Show the result
+          result.style.display = 'block'
+          if (data.error) {
+            status.textContent = data.error;
+            filenames.innerHTML = '';
+          } else {
+//            status.textContent = 'The following files were modified and copied to the destination folder:';
+//            filenames.innerHTML = data.files.map(file => `<li>${file}</li>`).join(''); 
+              filenames.innerHTML = data.msg.map(item => `<li>${item}</li>`).join(''); 
+          }
+        })
+        .catch(error => console.error(error));
+      });
+
+      var inputs = document.querySelectorAll('.tooltip');
+        inputs.forEach(function(el){
+        el.addEventListener("click", function(e){
+          inputs.forEach(function(el2){
+          el2.classList.remove("active");
+        });
+        this.classList.add("active");
+      });
+});
+
+    </script>
+  </body>
+</html>
