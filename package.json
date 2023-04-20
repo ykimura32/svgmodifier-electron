@@ -1,15 +1,58 @@
 {
-  "name": "electron-blog-example",
+  "name": "svg-modifier",
+  "productName": "SVG Modifier",
   "version": "1.0.0",
-  "description": "",
+  "description": "Yuki's test app",
   "main": "index.js",
+  "asar": false, 
+  "private": "true",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "electron-builder",
+    "dist-all": "electron-builder -mw"
   },
   "author": "Yuki Kimura",
   "license": "ISC",
   "dependencies": {
-    "electron": "^24.1.2"
+  },
+  "build": {
+    "appId": "com.electron-app",
+    "mac": {
+      "target": {
+        "target": "default",
+        "arch": [
+          "universal"
+        ]
+      },
+      "type": "distribution",
+      "gatekeeperAssess": false,
+      "entitlements": "entitlements.mac.plist"
+
+    },
+    "dmg": {
+      "title": "${productName} ${version}",
+      "sign": false
+    },
+    "win": {
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "msi",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "electron": "^24.1.2",
+    "electron-builder": "^23.3.3"
   }
 }
