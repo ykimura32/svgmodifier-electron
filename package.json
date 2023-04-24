@@ -1,10 +1,10 @@
 {
   "name": "svg-modifier",
-  "productName": "SVG Modifier",
+  "productName": "SVGModifier",
   "version": "1.0.0",
   "description": "Yuki's test app",
   "main": "index.js",
-  "asar": false, 
+  "asar": false,
   "private": "true",
   "scripts": {
     "start": "electron .",
@@ -15,6 +15,7 @@
   "author": "Yuki Kimura",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2"
   },
   "build": {
     "appId": "com.electron-app",
@@ -28,7 +29,6 @@
       "type": "distribution",
       "gatekeeperAssess": false,
       "entitlements": "entitlements.mac.plist"
-
     },
     "dmg": {
       "title": "${productName} ${version}",

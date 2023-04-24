@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
     <title>SVG Modifier</title>
     <style>
       body {
@@ -131,6 +131,18 @@
       const result = document.getElementById('result');
       const status = document.getElementById('status');
       const filenames = document.getElementById('filenames');
+      const baseUrl = "http://localhost:3000";
+
+      async function getSysInfo(e) {
+        const res = await fetch(baseUrl+'/OS', {
+          method: 'GET'
+        })
+        console.log(res);
+        const data = await res.json();
+        document.getElementById('source-folder').setAttribute('value', data.homeDir+'/');
+        document.getElementById('destination-folder').setAttribute('value', data.homeDir+'/');
+      }
+      getSysInfo();
 
       form.addEventListener('submit', event => {
         event.preventDefault();
@@ -140,10 +152,11 @@
         const destinationFolder = document.getElementById('destination-folder').value;
 
         // Send a POST request to the server
-        fetch('/fixSvg', {
+        fetch(baseUrl+'/fixSvg', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'http://localhost:3000'
           },
           body: JSON.stringify({ sourceFolder, destinationFolder })
         })
