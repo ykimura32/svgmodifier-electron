@@ -3,7 +3,6 @@
   "productName": "SVGModifier",
   "version": "1.0.0",
   "description": "Yuki's test app",
-  "main": "index.js",
   "asar": false,
   "private": "true",
   "scripts": {
@@ -15,6 +14,8 @@
   "author": "Yuki Kimura",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "electron-fetch": "^1.9.1",
     "express": "^4.18.2"
   },
   "build": {

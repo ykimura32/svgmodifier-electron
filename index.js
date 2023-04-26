@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require("electron");
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
-
+const path = require("path");
+const fs = require("fs");
 const server = require("./app");
 
 const createWindow = () => {
@@ -8,10 +9,13 @@ const createWindow = () => {
     width: 1200,
     height: 700,
     webPreferences: { 
-      webSecurity: false 
+      webSecurity: false ,
+      nodeIntegration: true
     }
   });
-  win.loadFile("./index.html");
+ // win.loadURL("http://localhost:3000");
+//  win.loadFile("./index.html");
+  win.loadFile(`${__dirname}/index.html`);
 };
 app.whenReady().then(() => {
   createWindow();

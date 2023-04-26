@@ -103,14 +103,14 @@
     <form id="form">
       <div class="file-input">
         <label for="source-folder">Source Folder: <div class="tooltip"><i class="fa fa-question-circle"></i></label>
-          <span class="tooltiptext">Mac example:<br /><ul><li>/Users/(username)/Desktop/svg/needs-code</li></ul><br />Windows example:<br /><br /><ul><li>C:\users\(username)\images\svg\needs-code</li></ul><br />Replace <strong><i>(username)</i></strong> with the name of the user profile you use to log into your laptop. </span>
+          <span class="tooltiptext">Mac example:<br /><ul><li>/Users/(username)/Desktop/svg/needs-code</li></ul><br />Windows example:<br /><br /><ul><li>C:\users\(username)\images\svg\needs-code</li></ul><br />Replace <strong><i>(username)</i></strong> with the name of the user profile you use to log into your laptop. On Windows machine only: if <strong><i>(username)</i></strong> contains spaces, wrap it in double quotes like this "Jane Doe"</span>
         </div>
         <input type="text" id="source-folder" name="source-folder" value="" placeholder="/path/to/source/folder">
       </div>
 
       <div class="file-input">
           <label for="destination-folder">Destination Folder: <div class="tooltip"><i class="fa fa-question-circle"></i></label>
-          <span class="tooltiptext">Mac example:<br /><ul><li>/Users/(username)/Desktop/svg/has-code</li></ul><br />Windows example:<br /><br /><ul><li>C:\users\(username)\images\svg\has-code</li></ul><br />Replace <i><strong>(username)</i></strong> with the name of the user profile you use to log into your laptop. </span>
+          <span class="tooltiptext">Mac example:<br /><ul><li>/Users/(username)/Desktop/svg/has-code</li></ul><br />Windows example:<br /><br /><ul><li>C:\users\(username)\images\svg\has-code</li></ul><br />Replace <i><strong>(username)</i></strong> with the name of the user profile you use to log into your laptop. On Windows machine only: if <strong><i>(username)</i></strong> contains spaces, wrap it in double quotes like this "Jane Doe"</span>
       </div>
 
       <input type="text" id="destination-folder" name="destination-folder" value="" placeholder="/path/to/destination/folder">
@@ -150,26 +150,28 @@
         // Get the source and destination folders
         const sourceFolder = document.getElementById('source-folder').value;
         const destinationFolder = document.getElementById('destination-folder').value;
-
+        
         // Send a POST request to the server
         fetch(baseUrl+'/fixSvg', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': 'http://localhost:3000'
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ sourceFolder, destinationFolder })
         })
         .then(response => response.json())
         .then(data => {
-          console.log(data);
+          console.log("the data: ",data);
           // Show the result
           result.style.display = 'block'
           if (data.error) {
-            status.textContent = data.error;
-            filenames.innerHTML = '';
+            status.style.color = "red";
+            status.textContent = 'Please correct the following error:';
+            //status.textContent += data.error;
+            filenames.innerHTML = `<p>`+data.error+`</p>`;
           } else {
-//            status.textContent = 'The following files were modified and copied to the destination folder:';
+            status.style.color = "green";
+            status.textContent = 'Success! The following actions were taken:';
 //            filenames.innerHTML = data.files.map(file => `<li>${file}</li>`).join(''); 
               filenames.innerHTML = data.msg.map(item => `<li>${item}</li>`).join(''); 
           }
